@@ -1,12 +1,11 @@
 FROM alpine:3.15
 
-LABEL maintainer="esplo <esplo@users.noreply.github.com>"
-
 ENV NGINX_VERSION 1.20.2
 
 ENV PORT=443
 ENV SSL_CERT=nginx.pem
 ENV SSL_KEY=nginx.key
+ENV DOMAIN=localhost
 
 RUN apk update \
     && apk upgrade \
@@ -27,6 +26,10 @@ RUN openssl req -new \
     -addext "extendedKeyUsage = serverAuth"
 
 COPY nginx.conf.template /etc/nginx/nginx.conf.template
+
+#RUN sed -i 's/{{domain}}/${DOMAIN}/g' /etc/nginx/nginx.conf.template
+
+
 COPY entrypoint.sh .
 
 EXPOSE 443
